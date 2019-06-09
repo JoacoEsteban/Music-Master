@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel build src/index.html",
-    "build": "parcel buils src/index.html",
-    "start": "npm build && live-server dist"
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "start": "npm run build && live-server dist"
   },
   "keywords": [],
   "author": "",
