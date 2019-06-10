@@ -29,7 +29,7 @@ class App extends Component
     searchArtist = () =>
     {
         var query = this.state.artistQuery;
-        this.setState({found: undefined, artistQuery: ''})
+        this.setState({found: query === '' ? undefined : 'loading', artistQuery: ''})
 
         fetch(`https://spotify-api-wrapper.appspot.com/artist/${query}`)
         .then(response => response.json())
@@ -81,9 +81,9 @@ class App extends Component
                     <Artist artist={this.state.artist} tracks={this.state.tracks}/>
                 </Animate>
 
-                <Animate show={this.state.found == false} duration={1000} >
+                <Animate show={this.state.found == false || this.state.found == 'loading'} duration={1000} >
                     <div className='artist'>
-                        <div className='not-found'>Artist Not Found</div>
+                        <div className='not-found'>{this.state.found == false ? 'Artist Not Foundasdf' : 'Loading'}</div>
                     </div>
                 </Animate>
             </div>
