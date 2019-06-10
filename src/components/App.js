@@ -3,7 +3,11 @@ import { Animate } from "react-animate-mount";
 
 class App extends Component
 {
-    state = {artistQuery: ""}
+    state = 
+    {
+        artistQuery: "boris brejcha",
+        artist: '',
+    }
 
     updateArtistQuery = event =>
     {
@@ -12,7 +16,11 @@ class App extends Component
 
     searchArtist = () =>
     {
-        console.log('this.state: ', this.state)
+        fetch(`https://spotify-api-wrapper.appspot.com/artist/${this.state.artistQuery}`)
+        .then(response =>  response.json())
+        .then(json => this.setState({artist: json.artists.items[0]}))
+        
+        
     }
 
     handleKeyPress = ({key}) =>
@@ -36,6 +44,9 @@ class App extends Component
                 <button 
                 className='button text transition'
                 onClick={this.searchArtist}>Search</button>
+
+
+                
             </div>
         )
     }
