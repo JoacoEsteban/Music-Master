@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import { Animate } from "react-animate-mount";
+var numeral = require('numeral');
+
 
 const Image = ({image}) =>
 {
@@ -15,7 +17,7 @@ const Image = ({image}) =>
 //     followers = followers.reverse().map((num, i) => 
 //     {
 //         return(
-            
+//             null
 //         )
 //     });
 
@@ -62,7 +64,7 @@ const Artist = ({artist, tracks}) =>
         <div className='artist no-size'>
                <Image image={artist.images[0]} />
                <h2>{artist.name}</h2>
-               <code>{artist.followers.total} followers</code>
+               <code>{numeral(artist.followers.total).format('0,0')} followers</code>
 
                 {/* <Followers total={artist.followers.total} /> */}
                 <Genres genres={artist.genres}/>
