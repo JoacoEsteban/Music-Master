@@ -23,6 +23,7 @@ a{
 hr
 {
     background: #555;
+    font-size: .5rem;
 }
 
 h2, h3, h4, h5, h6{
@@ -33,16 +34,24 @@ h2, h3, h4, h5, h6{
     color: #d0d0d0;
 }
 
-.artist-title{
-    margin-bottom: 2vmax
-}
-.artist-image{
+.artist img{
     width: 2rem;
+    height: 2rem;
+    object-fit: cover; /* to mantain pixel ratio */
     border-radius: 1rem;
-    border: .005rem solid white;
-
+    border: .02rem solid white;
     margin: .1rem;
+}
+.artist h2{
+    font-size: .6rem;
+}
+.artist h6{
+    font-size: .2rem;
     
+}
+.artist genres
+{
+    font-size: .1rem;
 }
 
 

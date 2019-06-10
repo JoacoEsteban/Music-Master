@@ -5,7 +5,14 @@ const Image = ({image}) =>
 {
     return(
 
-        <img src={image.url} className='artist-image' />
+        <img src={image.url}  />
+        )
+}
+const Genres = ({genres}) =>
+{
+    return( <genres>
+                {genres.map(genre => <span> {genre} </span> )}
+            </genres>
         )
 }
 
@@ -14,11 +21,11 @@ const Image = ({image}) =>
 const Artist = ({artist}) =>
 {
         return(
-            <div>
+            <div className='artist'>
                <Image image={artist.images[0]} />
-               
-               
-               <h2 className='artist-title'>{artist.name}</h2>
+               <h2>{artist.name}</h2>
+                <h6>{artist.followers.total} followers</h6>
+                <Genres genres={artist.genres}/>
             </div>
         )
 }
