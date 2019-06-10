@@ -8,22 +8,41 @@ const Image = ({image}) =>
         <img src={image.url} className='artist-img' />
         )
 }
+ 
+// const Followers = ({total}) =>
+// {
+//     var followers = total.toString().split('');
+//     followers = followers.reverse().map((num, i) => 
+//     {
+//         return(
+            
+//         )
+//     });
+
+//     followers = followers.reverse();
+
+//     //tostring
+//     <code>{followers} followers</code>
+// }
+
 const Genres = ({genres}) =>
 {
     return( <nav>
-                {genres.map((genre, i) => <span key={i}> {genre} </span> )}
+                {genres.map((genre, i) => <span key={i}> / {genre}</span> )} /
             </nav>
         )
-}
-
-
-const Track = ({track}) =>
-{
-    return(
-        <span className='track'>
+    }
+    
+    
+    const Track = ({track}) =>
+    {
+        return(
+        <span className='track transition'>
             <img className='track-img' src={track.album.images[0].url} />
-            <h5 >{track.name}</h5>
-            <h6 >{track.album.name}</h6>
+            <div className='labels'>
+                <h5 >{track.name}<br/> </h5>
+                <h6 >{track.album.name}</h6>
+            </div>
         </span>
     )
 }
@@ -39,11 +58,13 @@ const Tracks = ({tracks}) =>
 
 const Artist = ({artist, tracks}) =>
 {
-        return(
-            <div className='artist'>
+    return(
+        <div className='artist no-size'>
                <Image image={artist.images[0]} />
                <h2>{artist.name}</h2>
-                <code>{artist.followers.total} followers</code>
+               <code>{artist.followers.total} followers</code>
+
+                {/* <Followers total={artist.followers.total} /> */}
                 <Genres genres={artist.genres}/>
                 <Tracks tracks={tracks}/>
             </div>

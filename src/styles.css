@@ -1,9 +1,10 @@
 html{
     margin: 0;
     padding: 0;
-
+    
     font-size: 10vmax;
 }
+
 body
 {
     color: #999;
@@ -37,6 +38,9 @@ h2, h3, h4, h5, h6{
     font-weight: 200;
     color: #d0d0d0;
 }
+/* .artist{
+    font-size: 1rem;
+} */
 
 .artist-img{
     width: 2rem;
@@ -51,15 +55,14 @@ h2, h3, h4, h5, h6{
 }
 .artist h5{
     font-size: .2rem;
-    font-weight: 400;
-    letter-spacing: .02rem;
+    font-weight: 500;
     margin-bottom: .05rem;
     width: 1.5rem;
     
 }
 .artist h6{
     font-size: .15rem;
-    width: 1.5rem;
+    /* width: 1.5rem; */
     
 }
 .artist code{
@@ -71,35 +74,74 @@ h2, h3, h4, h5, h6{
 .artist nav
 {
     font-size: .1rem;
+    margin-bottom: .1rem
 }
+
+
+
+.track-container
+{   display: flexbox;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+
 
 .track
 {
     display: inline-block;
-    margin: .15rem .05rem;
+    font-size: 1rem;
+    width: 2rem;
+    padding: 0;
+    margin: 0;
+    margin: 0 .05rem;
+    margin-bottom: .5rem;
 }
-
-
+/* .track:hover
+{
+    transform: scale(1.2);
+} */
 .track-img
 {
-    width: 1.5rem;
-    height: 1.5rem;
+    display: inline;
+    width: 2em;
+    height: 2em;
     object-fit: cover; /* to mantain pixel ratio */
-    margin: .1rem;
+    margin: .1em;
+    margin: 0;
     border-radius: 0;
 }
-
-.track-container
-{
-    display: flexbox;
-    flex-wrap: wrap;
-    justify-content: center
+.labels {
+    width: 2rem;
+    /* height: .5rem; */
+    position: absolute;
 }
+.track h5
+{
+    display: inline-block;
+    text-align: left;
+    width: 2rem;
+    /* height: .3rem; */
+    font-size: .11rem;
+    margin: 0px;
+}
+.track h6
+{
+    text-align: left;
+    display: inline-block;
+    width: 2rem;
+    /* height: .25rem; */
+    font-size: .1rem;
+}
+
+
+
 
 
 .text
 {
-    font-size: 15px;
+    font-size: .12rem;
     height: .3rem;
     border-radius: .03rem;
     border: 0;
@@ -132,4 +174,13 @@ h2, h3, h4, h5, h6{
 {
     padding: 0 .1rem;
     margin: .1rem .1rem;
+}
+
+
+@media only screen and (max-width: 980px) 
+{
+    html {
+        font-size: 20vmax;
+    }
+    
 }

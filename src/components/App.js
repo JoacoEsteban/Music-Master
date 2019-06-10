@@ -7,7 +7,7 @@ class App extends Component
 {
     state = 
     {
-        artistQuery: "boris brejcha",
+        artistQuery: "pleasurekraft",
         artist: undefined,
         tracks: undefined,
         found: undefined,
@@ -22,7 +22,7 @@ class App extends Component
 
         //If the character befor the current one is a space, then capitalize current one
         string = string[string.length - 2] === ' ' ? string.substring(0, string.length - 1) + string.charAt(string.length - 1).toUpperCase() : string; 
-        
+
         this.setState({artistQuery: string})
     }
 
