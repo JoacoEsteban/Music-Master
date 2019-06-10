@@ -25,12 +25,17 @@ class App extends Component
         return(
             <div>
                 <h2>Music Master</h2>
+
+
                 <input 
+                    className='input text transition'
                 onChange={this.updateArtistQuery}
                 onKeyPress={this.handleKeyPress}
                 placeholder='Search for Artists'
                 />
-                <button onClick={this.searchArtist}>Search</button>
+                <button 
+                className='button text transition'
+                onClick={this.searchArtist}>Search</button>
             </div>
         )
     }
