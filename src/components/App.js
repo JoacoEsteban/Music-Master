@@ -7,7 +7,7 @@ class App extends Component
 {
     state = 
     {
-        artistQuery: "pleasurekraft",
+        artistQuery: "",
         artist: undefined,
         tracks: undefined,
         found: undefined,
@@ -83,7 +83,7 @@ class App extends Component
 
                 <Animate show={this.state.found == false || this.state.found == 'loading'} duration={1000} >
                     <div className='artist'>
-                        <div className='not-found'>{this.state.found == false ? 'Artist Not Foundasdf' : 'Loading'}</div>
+                        <div className='not-found'>{this.state.found == false ? 'Artist Not Found' : 'Loading'}</div>
                     </div>
                 </Animate>
             </div>
