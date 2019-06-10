@@ -16,7 +16,14 @@ class App extends Component
 
     updateArtistQuery = event =>
     {
-        this.setState({artistQuery: event.target.value})
+        var string = event.target.value;
+        
+        string = string.length === 1 ? string.charAt(0).toUpperCase() : string;
+
+        //If the character befor the current one is a space, then capitalize current one
+        string = string[string.length - 2] === ' ' ? string.substring(0, string.length - 1) + string.charAt(string.length - 1).toUpperCase() : string; 
+        
+        this.setState({artistQuery: string})
     }
 
     searchArtist = () =>
@@ -30,14 +37,13 @@ class App extends Component
         {
             if(json.artists.items.length )
             {
-                console.log('jasldfsd', json);
                 this.setState({artist: json.artists.items[0]});
                 
                 //fetch Top Tracks
                 fetch(`https://spotify-api-wrapper.appspot.com/artist/${json.artists.items[0].id}/top-tracks`)
                 .then(response =>  response.json())
                 .then(json => this.setState({tracks: json.tracks, found: true}))
-                .then(console.log('tracks: ',this.state.tracks))
+                // .then(console.log('tracks: ',this.state.tracks))
             }else
             {
                 this.setState({found: false})
