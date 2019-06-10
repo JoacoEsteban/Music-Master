@@ -10,9 +10,9 @@ const Image = ({image}) =>
 }
 const Genres = ({genres}) =>
 {
-    return( <genres>
-                {genres.map(genre => <span> {genre} </span> )}
-            </genres>
+    return( <nav>
+                {genres.map((genre, i) => <span key={i}> {genre} </span> )}
+            </nav>
         )
 }
 

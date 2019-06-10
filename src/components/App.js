@@ -9,6 +9,7 @@ class App extends Component
     {
         artistQuery: "boris brejcha",
         artist: null,
+        topTracks: null,
     }
 
     updateArtistQuery = event =>
@@ -20,10 +21,16 @@ class App extends Component
     {
         fetch(`https://spotify-api-wrapper.appspot.com/artist/${this.state.artistQuery}`)
         .then(response =>  response.json())
-        .then(json => this.setState({artist: json.artists.items[0]}))
-        .then(console.log(this.state.artist))
+        .then(json => 
+        {
+            this.setState({artist: json.artists.items[0]});
         
-        
+            //fetch Top Tracks
+            fetch(`https://spotify-api-wrapper.appspot.com/artist/${json.artists.items[0].id}/top-tracks`)
+            .then(response =>  response.json())
+            .then(json => this.setState({topTracks: json.tracks}))
+            .then(console.log('tracks: ',this.state.topTracks))
+        })
     }
 
     handleKeyPress = ({key}) =>
@@ -49,7 +56,7 @@ class App extends Component
                 onClick={this.searchArtist}>Search</button>
 
                 <Animate show={this.state.artist}>
-                    <Artist artist={this.state.artist} />
+                    <Artist artist={this.state.artist} tracks={this.state.topTracks}/>
                 </Animate>
 
             </div>
