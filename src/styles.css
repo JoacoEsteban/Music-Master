@@ -15,6 +15,10 @@ body
 div{
     font-size: 0;
 }
+.not-found{
+    font-size: .2rem;
+    font-family: oswald;
+}
 
 a{
     color: #05f
@@ -34,7 +38,7 @@ h2, h3, h4, h5, h6{
     color: #d0d0d0;
 }
 
-.artist img{
+.artist-img{
     width: 2rem;
     height: 2rem;
     object-fit: cover; /* to mantain pixel ratio */
@@ -45,13 +49,51 @@ h2, h3, h4, h5, h6{
 .artist h2{
     font-size: .6rem;
 }
-.artist h6{
+.artist h5{
     font-size: .2rem;
+    font-weight: 400;
+    letter-spacing: .02rem;
+    margin-bottom: .05rem;
+    width: 1.5rem;
+    
+}
+.artist h6{
+    font-size: .15rem;
+    width: 1.5rem;
+    
+}
+.artist code{
+    color: #555;
+    font-family: oswald;
+    font-size: .15rem;
     
 }
 .artist nav
 {
     font-size: .1rem;
+}
+
+.track
+{
+    display: inline-block;
+    margin: .15rem .05rem;
+}
+
+
+.track-img
+{
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: cover; /* to mantain pixel ratio */
+    margin: .1rem;
+    border-radius: 0;
+}
+
+.track-container
+{
+    display: flexbox;
+    flex-wrap: wrap;
+    justify-content: center
 }
 
 

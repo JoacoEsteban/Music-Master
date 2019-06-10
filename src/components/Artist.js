@@ -5,7 +5,7 @@ const Image = ({image}) =>
 {
     return(
 
-        <img src={image.url}  />
+        <img src={image.url} className='artist-img' />
         )
 }
 const Genres = ({genres}) =>
@@ -17,15 +17,35 @@ const Genres = ({genres}) =>
 }
 
 
+const Track = ({track}) =>
+{
+    return(
+        <span className='track'>
+            <img className='track-img' src={track.album.images[0].url} />
+            <h5 >{track.name}</h5>
+            <h6 >{track.album.name}</h6>
+        </span>
+    )
+}
 
-const Artist = ({artist}) =>
+const Tracks = ({tracks}) =>
+{
+    return(
+        <div className='track-container'>
+            {tracks.map((track, i) => <Track track={track} key={i} /> )}
+        </div>
+    )
+}
+
+const Artist = ({artist, tracks}) =>
 {
         return(
             <div className='artist'>
                <Image image={artist.images[0]} />
                <h2>{artist.name}</h2>
-                <h6>{artist.followers.total} followers</h6>
+                <code>{artist.followers.total} followers</code>
                 <Genres genres={artist.genres}/>
+                <Tracks tracks={tracks}/>
             </div>
         )
 }

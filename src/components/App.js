@@ -8,8 +8,10 @@ class App extends Component
     state = 
     {
         artistQuery: "boris brejcha",
-        artist: null,
-        topTracks: null,
+        artist: undefined,
+        tracks: undefined,
+        found: undefined,
+        loading: false,
     }
 
     updateArtistQuery = event =>
@@ -19,17 +21,27 @@ class App extends Component
 
     searchArtist = () =>
     {
-        fetch(`https://spotify-api-wrapper.appspot.com/artist/${this.state.artistQuery}`)
-        .then(response =>  response.json())
+        var query = this.state.artistQuery;
+        this.setState({found: undefined, artistQuery: ''})
+
+        fetch(`https://spotify-api-wrapper.appspot.com/artist/${query}`)
+        .then(response => response.json())
         .then(json => 
         {
-            this.setState({artist: json.artists.items[0]});
-        
-            //fetch Top Tracks
-            fetch(`https://spotify-api-wrapper.appspot.com/artist/${json.artists.items[0].id}/top-tracks`)
-            .then(response =>  response.json())
-            .then(json => this.setState({topTracks: json.tracks}))
-            .then(console.log('tracks: ',this.state.topTracks))
+            if(json.artists.items.length )
+            {
+                console.log('jasldfsd', json);
+                this.setState({artist: json.artists.items[0]});
+                
+                //fetch Top Tracks
+                fetch(`https://spotify-api-wrapper.appspot.com/artist/${json.artists.items[0].id}/top-tracks`)
+                .then(response =>  response.json())
+                .then(json => this.setState({tracks: json.tracks, found: true}))
+                .then(console.log('tracks: ',this.state.tracks))
+            }else
+            {
+                this.setState({found: false})
+            }
         })
     }
 
@@ -50,15 +62,24 @@ class App extends Component
                 onChange={this.updateArtistQuery}
                 onKeyPress={this.handleKeyPress}
                 placeholder='Search for Artists'
+                value={this.state.artistQuery}
                 />
                 <button 
                 className='button text transition'
-                onClick={this.searchArtist}>Search</button>
+                onClick={()=>{
+                    // this.setState({found: undefined});
+                    this.searchArtist()}
+                }>Search</button>
 
-                <Animate show={this.state.artist}>
-                    <Artist artist={this.state.artist} tracks={this.state.topTracks}/>
+                <Animate show={this.state.found == true} duration={1500}>
+                    <Artist artist={this.state.artist} tracks={this.state.tracks}/>
                 </Animate>
 
+                <Animate show={this.state.found == false} duration={1000} >
+                    <div className='artist'>
+                        <div className='not-found'>Artist Not Found</div>
+                    </div>
+                </Animate>
             </div>
         )
     }
