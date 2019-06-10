@@ -167,11 +167,6 @@ h2, h3, h4, h5, h6{
 
 .button
 {
-    margin-left: .1rem;
-}
-.button
-{
-    margin-left: .1rem;
     background: #333;
 }
 .button:hover
