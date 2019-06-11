@@ -72,10 +72,8 @@ class App extends Component
                 />
                 <button 
                 className='button text transition'
-                onClick={()=>{
-                    // this.setState({found: undefined});
-                    this.searchArtist()}
-                }>Search</button>
+                onClick={this.searchArtist}
+                >Search</button>
 
                 <Animate show={this.state.found == true} duration={1500}>
                     <Artist artist={this.state.artist} tracks={this.state.tracks}/>
