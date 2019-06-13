@@ -1,2 +1,2 @@
 # React-App using Spotify API
-## check it out at music-master-application.herokuapp.com
+Check it out at [Music-Master-Application.herokuapp.com](https://music-master-application.herokuapp.com/)
