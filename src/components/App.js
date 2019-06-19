@@ -31,16 +31,17 @@ class App extends Component
         var query = this.state.artistQuery;
         this.setState({found: query === '' ? undefined : 'loading', artistQuery: ''})
 
-        fetch(`https://spotify-api-wrapper.appspot.com/artist/${query}`)
+        fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist/${query}`)
         .then(response => response.json())
         .then(json => 
         {
+            console.log(json)
             if(json.artists.items.length )
             {
                 this.setState({artist: json.artists.items[0]});
                 
                 //fetch Top Tracks
-                fetch(`https://spotify-api-wrapper.appspot.com/artist/${json.artists.items[0].id}/top-tracks`)
+                fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist/${json.artists.items[0].id}/top-tracks`)
                 .then(response =>  response.json())
                 .then(json => this.setState({tracks: json.tracks, found: true}))
                 // .then(console.log('tracks: ',this.state.tracks))
