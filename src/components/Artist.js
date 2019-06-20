@@ -90,13 +90,7 @@ componentWillUnmount()
 Image = ({image}) => image !== undefined ? <div className='artist-img' style={{backgroundImage: `url('${image.url}')` }}></div> : null;
 
     
-Genres = ({genres}) =>
-{
-    return( <nav>
-            {genres.map((genre, i) => <span key={i}> / {genre}</span> )} /
-        </nav>
-    )
-}
+Genres = ({genres}) => genres.length !== 0 ? <nav> {genres.map((genre, i) => <span key={i}> / {genre}</span> )} / </nav> : null;
 
 
 Track = ({track, index}) =>
