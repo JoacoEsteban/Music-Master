@@ -28,28 +28,26 @@ class App extends Component
 
     searchArtist = () =>
     {
-        var query = this.state.artistQuery;
+        var query = this.state.artistQuery.trim();
         this.setState({found: query === '' ? undefined : 'loading', artistQuery: ''})
 
-        fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist/${query}`)
-        .then(response => response.json())
-        .then(json => 
+        if(query !== '')
         {
-            console.log(json)
-            if(json.artists.items.length )
-            {
-                this.setState({artist: json.artists.items[0]});
-                
-                //fetch Top Tracks
-                fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist/${json.artists.items[0].id}/top-tracks`)
-                .then(response =>  response.json())
-                .then(json => this.setState({tracks: json.tracks, found: true}))
-                // .then(console.log('tracks: ',this.state.tracks))
-            }else
-            {
-                this.setState({found: false})
-            }
-        })
+
+            fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist-with-tracks/${query}`)
+            .then(response => response.json())
+            .then(json => 
+                {
+                    console.log(json)
+                    if(json.artist.items.length )
+                    {
+                        this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true});
+                    }else
+                    {
+                        this.setState({found: false})
+                    }
+                })
+        }
     }
 
     handleKeyPress = ({key}) =>
