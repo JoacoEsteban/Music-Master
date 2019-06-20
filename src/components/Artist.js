@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Animate } from "react-animate-mount";
 var numeral = require('numeral');
-
+import playbutton from  '../resources/play-button.png'
 
 const Image = ({image}) =>
 {
@@ -33,19 +33,21 @@ const Genres = ({genres}) =>
                 {genres.map((genre, i) => <span key={i}> / {genre}</span> )} /
             </nav>
         )
-    }
-    
-    
-    const Track = ({track}) =>
-    {
-        return(
-        <span className='track transition'>
-            <img className='track-img' src={track.album.images[0].url} />
-            <div className='labels'>
-                <h5 >{track.name}<br/> </h5>
-                <h6 >{track.album.name}</h6>
-            </div>
-        </span>
+}
+
+
+const Track = ({track}) =>
+{
+    return(
+    <span className='track transition'>
+        <div className='track-img' style={{backgroundImage: `url('${track.album.images[0].url}')` }}>
+            <img className='skere' src={playbutton}/>
+        </div>
+        <div className='labels'>
+            <h5 >{track.name}<br/> </h5>
+            <h6 >{track.album.name}</h6>
+        </div>
+    </span>
     )
 }
 
