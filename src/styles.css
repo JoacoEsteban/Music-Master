@@ -38,9 +38,12 @@ h2, h3, h4, h5, h6{
     font-weight: 200;
     color: #d0d0d0;
 }
-/* .artist{
-    font-size: 1rem;
-} */
+
+
+
+
+
+/* ARTIST */
 
 .artist-img{
     width: 2rem;
@@ -80,14 +83,16 @@ h2, h3, h4, h5, h6{
 
 
 
+
+
+
+/* TRACKS */
 .track-container
 {   display: flexbox;
     flex-wrap: wrap;
     justify-content: center;
 
 }
-
-
 
 .track
 {
@@ -99,11 +104,6 @@ h2, h3, h4, h5, h6{
     margin: 0 .05rem;
     margin-bottom: .5rem;
 }
-/* .track:hover
-{
-    transform: scale(1.2);
-} */
-
 .track-img
 {
     display: block;
@@ -121,6 +121,7 @@ h2, h3, h4, h5, h6{
     /* height: .5rem; */
     position: absolute;
 }
+
 .track h5
 {
     display: inline-block;
@@ -147,10 +148,18 @@ h2, h3, h4, h5, h6{
 
 
 
+
+/* CONTROLS WIDGET */
+
 .controls
 {
     position: fixed;
     bottom: 50%;
+    transition: all .2s ease-out;
+}
+.controls:hover{
+    transform: translateX(.05rem);
+    /* left: .05rem; */
 }
 .controls button
 {
@@ -161,7 +170,7 @@ h2, h3, h4, h5, h6{
     border: 0px;
     font-size: .2rem;
     border-radius: .04rem;
-    transition: all .1s ease-out;
+    transition: all .2s ease-out;
 }
 .play-pause-button
 {
@@ -169,8 +178,18 @@ h2, h3, h4, h5, h6{
 }
 .controls button:hover
 {
-    transform: scale(1.2)
+    
+    background:  rgb(57, 173, 64);
+    transform: scale(1.05)
 }
+.play-pause-button:hover{
+    fill:#222;
+
+}
+
+
+
+
 
 
 
