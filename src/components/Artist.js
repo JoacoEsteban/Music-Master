@@ -1,11 +1,8 @@
 import React, {Component} from 'react'
-import { Animate } from "react-animate-mount";
 var numeral = require('numeral');
-import playbutton from  '../resources/play-button.png'
-// import { stat } from 'fs';
 
-// var audioIsPlaying = false; //selfexplanatory
-// var trackBeingPlayed = undefined; //this one too
+import PlayButton from  '../resources/icons/play-icon'
+import PauseButton from  '../resources/icons/pause-icon'
 
 class Artist extends Component
 {
@@ -103,15 +100,13 @@ Track = ({track, index}) =>
     // var trackAudio = new Audio(track.preview_url);
     return(
         <span className='track transition'>
-    <div className='track-img' style={{backgroundImage: `url('${track.album.images[0].url}')` }}>
-        <img
-        className='skere' 
-        src={playbutton}
-        onClick={() =>
-            {
-                this.handleMedia(index);
-            }
-        }
+    <div 
+    className='track-img'
+    style={{backgroundImage: `url('${track.album.images[0].url}')` }}
+    onClick={()=>this.handleMedia(index)}
+    >
+        <PlayButton
+        mode='track'
         />
 
     </div>
@@ -157,7 +152,7 @@ return(
                     }
                 }
             >
-                {this.state.audioIsPlaying ? 'Pause' : 'Play'}
+                {this.state.audioIsPlaying ? <PauseButton mode='button'/> : <PlayButton mode='button' />}
             </button>
 
         </div>

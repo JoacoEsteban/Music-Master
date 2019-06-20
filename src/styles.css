@@ -113,6 +113,8 @@ h2, h3, h4, h5, h6{
     margin: .1em;
     margin: 0;
     border-radius: 0;
+    padding: .7rem; /*controls play button size*/
+
 }
 .labels {
     width: 2rem;
@@ -137,23 +139,37 @@ h2, h3, h4, h5, h6{
     font-size: .1rem;
 }
 
-.skere{
-    margin-top: 25%;
-    width: 1rem;
-    height: 1rem;
+.track-button {
+    background: white;
+    border-radius: 2rem;
+    opacity: .75;
 }
+
+
+
 .controls
 {
     position: fixed;
-    bottom: 0;
+    bottom: 50%;
 }
 .controls button
 {
-    width:.5rem;
-    height:.5rem;
+    padding: 0;
+    width:.6rem;
+    height:.6rem;
+    background:#252525;
     border: 0px;
     font-size: .2rem;
-    border-radius: 1rem;
+    border-radius: .04rem;
+    transition: all .1s ease-out;
+}
+.play-pause-button
+{
+    fill:  #49E253;
+}
+.controls button:hover
+{
+    transform: scale(1.2)
 }
 
 
