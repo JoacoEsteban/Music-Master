@@ -46,9 +46,10 @@ h2, h3, h4, h5, h6{
     width: 2rem;
     height: 2rem;
     object-fit: cover; /* to mantain pixel ratio */
+    background-size: cover; /* to mantain pixel ratio */
     border-radius: 1rem;
     border: .02rem solid white;
-    margin: .1rem;
+    margin: auto;
 }
 .artist h2{
     font-size: .6rem;
@@ -150,7 +151,9 @@ h2, h3, h4, h5, h6{
 {
     width:.5rem;
     height:.5rem;
-    font-size: 2em;
+    border: 0px;
+    font-size: .2rem;
+    border-radius: 1rem;
 }
 
 
