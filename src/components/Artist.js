@@ -87,17 +87,8 @@ componentWillUnmount()
 
 //--------------------COMPONENT--------------------//
 
-Image = ({image}) =>
-{
-    
-    // <img src={image.url} className='artist-img' />
-    if(image !== undefined){
-        
-        return(
-            <div className='artist-img' style={{backgroundImage: `url('${image.url}')` }}></div>
-            )
-        }else{ return null; }
-}
+Image = ({image}) => image !== undefined ? <div className='artist-img' style={{backgroundImage: `url('${image.url}')` }}></div> : null;
+
     
 Genres = ({genres}) =>
 {
