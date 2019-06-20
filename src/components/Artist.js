@@ -8,7 +8,7 @@ class Artist extends Component
 {
     state={
         audioIsPlaying: false,
-        // var [ trackBeingPlayed, setTrackBeingPlayed ] = useState(undefined);
+        trackBeingPlayed: undefined,
 
     }
 
@@ -38,9 +38,9 @@ playTrack = (track) =>
         this.trackAudios[track].play();
         
         this.AIP = true;
-        this.setState({audioIsPlaying: true});
-        
         this.TBP = track;
+        this.setState({audioIsPlaying: true, trackBeingPlayed: this.TBP});
+        
     }
 }
 
@@ -51,7 +51,8 @@ pauseTrack = (track) =>
     {
         this.trackAudios[track].pause();
         this.AIP = false;
-        this.setState({audioIsPlaying: false});
+     
+        this.setState({audioIsPlaying: false, trackBeingPlayed: undefined});
     }
 }
 
@@ -105,10 +106,7 @@ Track = ({track, index}) =>
     style={{backgroundImage: `url('${track.album.images[0].url}')` }}
     onClick={()=>this.handleMedia(index)}
     >
-        <PlayButton
-        mode='track'
-        />
-
+    { this.state.trackBeingPlayed === index ? <PauseButton mode='track' />  : <PlayButton mode='track' />  }
     </div>
     <div className='labels'>
         <h5 >{track.name}<br/> </h5>
