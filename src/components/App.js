@@ -7,7 +7,7 @@ class App extends Component
 {
     state = 
     {
-        artistQuery: "boris",
+        artistQuery: "eevee",
         artist: undefined,
         tracks: undefined,
         found: undefined,
@@ -37,7 +37,7 @@ class App extends Component
             .then(response => {  if(response.status !== 404){ return response.json();} else {return false;}})
             .then(json => 
                 {
-                    console.log(json)
+                    // console.log(json)
                     if(json)
                     {
                         this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true});
