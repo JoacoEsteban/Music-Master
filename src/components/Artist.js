@@ -79,7 +79,7 @@ handleMedia = (i) =>
 
 componentWillUnmount()
 {
-    console.log('chausito')
+    this.pauseTrack(this.TBP);
 }
 
 
