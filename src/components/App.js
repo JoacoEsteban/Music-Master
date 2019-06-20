@@ -33,19 +33,23 @@ class App extends Component
 
         if(query !== '')
         {
-            fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist-with-tracks/${query}`)
-            .then(response => {  if(response.status !== 404){ return response.json();} else {return false;}})
-            .then(json => 
-                {
-                    // console.log(json)
-                    if(json)
+            this.setState({found: undefined});
+            setTimeout(() => {
+                
+                fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist-with-tracks/${query}`)
+                .then(response => {  if(response.status !== 404){ return response.json();} else {return false;}})
+                .then(json => 
                     {
-                        this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true});
-                    }else
-                    {
-                        this.setState({found: false})
-                    }
-                })
+                        console.log(json)
+                        if(json)
+                        {
+                            this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true});
+                        }else
+                        {
+                            this.setState({found: false})
+                        }
+                    })
+                }, 500);
         }
     }
 
@@ -73,7 +77,7 @@ class App extends Component
                 onClick={this.searchArtist}
                 >Search</button>
 
-                <Animate show={this.state.found == true} duration={1500}>
+                <Animate show={this.state.found == true} duration={500}>
                     <Artist artist={this.state.artist} tracks={this.state.tracks}/>
                 </Animate>
 

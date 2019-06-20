@@ -36,21 +36,26 @@ class Artist extends Component
 
 playTrack = (track) =>
 {
-    this.trackAudios[track].play();
-    
-    this.AIP = true;
-    this.setState({audioIsPlaying: true});
-    
-    this.TBP = track;
+    if( this.trackAudios[track].error == undefined )
+    {
+        this.trackAudios[track].play();
+        
+        this.AIP = true;
+        this.setState({audioIsPlaying: true});
+        
+        this.TBP = track;
+    }
 }
 
 pauseTrack = (track) =>
 {
     console.log('pause ', track)
-    this.trackAudios[track].pause();
-    
-    this.AIP = false;
-    this.setState({audioIsPlaying: false});
+    if( this.trackAudios[track].error == undefined )
+    {
+        this.trackAudios[track].pause();
+        this.AIP = false;
+        this.setState({audioIsPlaying: false});
+    }
 }
 
 handleMedia = (i) =>
@@ -66,7 +71,7 @@ handleMedia = (i) =>
             if(this.TBP === i)
             {
                 this.pauseTrack(i);
-            }else
+            }else if(this.trackAudios[i].error == undefined)
             {
                 this.pauseTrack(this.TBP);
                 this.playTrack(i);
