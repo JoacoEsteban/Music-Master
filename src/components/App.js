@@ -33,13 +33,12 @@ class App extends Component
 
         if(query !== '')
         {
-
             fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist-with-tracks/${query}`)
-            .then(response => response.json())
+            .then(response => {  if(response.status !== 404){ return response.json();} else {return false;}})
             .then(json => 
                 {
                     console.log(json)
-                    if(json.artist.items.length )
+                    if(json)
                     {
                         this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true});
                     }else
