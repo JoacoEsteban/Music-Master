@@ -3,6 +3,10 @@ import { Animate } from "react-animate-mount";
 var numeral = require('numeral');
 import playbutton from  '../resources/play-button.png'
 
+var audioIsPlaying = false; //selfexplanatory
+var trackBeingPlayed = undefined; //this one too
+var trackAudios; //defined inside the <Artist> component with its props
+
 const Image = ({image}) =>
 {
     return(
@@ -10,22 +14,6 @@ const Image = ({image}) =>
         <img src={image.url} className='artist-img' />
         )
 }
- 
-// const Followers = ({total}) =>
-// {
-//     var followers = total.toString().split('');
-//     followers = followers.reverse().map((num, i) => 
-//     {
-//         return(
-//             null
-//         )
-//     });
-
-//     followers = followers.reverse();
-
-//     //tostring
-//     <code>{followers} followers</code>
-// }
 
 const Genres = ({genres}) =>
 {
@@ -36,12 +24,22 @@ const Genres = ({genres}) =>
 }
 
 
-const Track = ({track}) =>
+const Track = ({track, index}) =>
 {
+    // var trackAudio = new Audio(track.preview_url);
     return(
     <span className='track transition'>
         <div className='track-img' style={{backgroundImage: `url('${track.album.images[0].url}')` }}>
-            <img className='skere' src={playbutton}/>
+            <img
+            className='skere' 
+            src={playbutton}
+            onClick={() =>
+                {
+                    handleMedia(index);
+                }
+            }
+            />
+
         </div>
         <div className='labels'>
             <h5 >{track.name}<br/> </h5>
@@ -55,13 +53,14 @@ const Tracks = ({tracks}) =>
 {
     return(
         <div className='track-container'>
-            {tracks.map((track, i) => <Track track={track} key={i} /> )}
+            {tracks.map((track, i) => <Track track={track} key={i} index={i} /> )}
         </div>
     )
 }
 
 const Artist = ({artist, tracks}) =>
 {
+    trackAudios = tracks.map((track)=> new Audio(track.preview_url)); //tracklist
     return(
         <div className='artist no-size'>
                <Image image={artist.images[0]} />
@@ -71,8 +70,56 @@ const Artist = ({artist, tracks}) =>
                 {/* <Followers total={artist.followers.total} /> */}
                 <Genres genres={artist.genres}/>
                 <Tracks tracks={tracks}/>
+
+                <div className='controls'>
+                    <button
+                        onClick={()=>{handleMedia(trackBeingPlayed)}}
+                    >Play</button>
+                    <button>Pause</button>
+                </div>
             </div>
         )
+}
+
+
+
+
+const pause = () =>
+{
+    trackAudios[trackBeingPlayed].pause();
+    audioIsPlaying = false;
+}
+
+const play = (i) =>
+{
+    i = i === undefined ? trackBeingPlayed : i;
+    trackAudios[i].play();
+    audioIsPlaying = true;
+}
+
+
+const handleMedia = (i) =>
+
+{
+    console.log(i);
+    if( i !== undefined )
+    {
+        if(audioIsPlaying)
+        {
+            pause();
+        }else if(!audioIsPlaying)
+        {
+            play(i);
+        }
+        
+        
+        if(i !== trackBeingPlayed)
+        {
+            trackBeingPlayed = i;
+            play();
+        }
+        
+    }
 }
 
 
