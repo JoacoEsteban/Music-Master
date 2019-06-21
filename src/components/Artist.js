@@ -3,6 +3,8 @@ var numeral = require('numeral');
 
 import PlayButton from  '../resources/icons/play-icon'
 import PauseButton from  '../resources/icons/pause-icon'
+import VolumeIcon from  '../resources/icons/volume-icon'
+import MuteIcon from  '../resources/icons/mute-icon'
 
 class Artist extends Component
 {
@@ -43,8 +45,7 @@ playTrack = (track) =>
         this.AIP = true;
         this.TBP = track;
         this.setState({audioIsPlaying: true, trackBeingPlayed: this.TBP});
-        if(!this.state.MUTED){this.setVolume(track);}
-        else{this.muteTrack(track)}
+        if(!this.state.MUTED){this.setVolume(track)}else{this.setVolume(this.TBP, 0); console.log('holi')}
         
     }
 }
@@ -83,25 +84,25 @@ handleMedia = (track) =>
     }
 }
 
-muteTrack = (track) =>
+mute = () =>
 {
-    if(this.trackAudios[track] !== undefined)
-    {
+    // if(this.trackAudios[track] !== undefined)
+    // {
 
-        if(this.trackAudios[track].volume > 0)
+        if( !this.state.MUTED )
         {
-            this.trackAudios[track].volume = 0;
+            this.trackAudios[this.TBP].volume = 0;
             this.setState({MUTED: true, muteColor: 'red'});
             console.log('muted: ', this.state.MUTED)
             console.log('color: ', this.muteColor)
         }else
-        {this.unMuteTrack(track)}
-    }
+        {this.unMuteTrack()}
+    // }
 }
 
-unMuteTrack = (track) =>
+unMuteTrack = () =>
 {
-    this.trackAudios[track].volume = this.VOLUME;
+    this.trackAudios[this.TBP].volume = this.VOLUME;
     this.setState({MUTED: false, muteColor: undefined});
     console.log('muted: ', this.state.MUTED)
     console.log('color: ', this.muteColor)
@@ -110,23 +111,23 @@ unMuteTrack = (track) =>
 
 setVolume = (track, vol) =>
 {
-    if(vol !== undefined)
-    {
-        this.VOLUME = vol;
-    }
-    this.trackAudios[track].volume = this.VOLUME;
+    if(vol === undefined){vol = this.VOLUME}
+    this.trackAudios[track].volume = vol;
 }
 
 handleVolume = (event, mode) =>
 {
-        var element = document.getElementById('volume-button');
-        var width = element.offsetWidth;
-        var offset = Math.round(element.getBoundingClientRect().left);
-        var percentage = Math.round(100 / width * event.clientX - offset)/100;
-        percentage = percentage < 0 ? 0 : percentage;
-        this.VOLUME = percentage;
-        // console.log(this.VOLUME)
-        this.setVolume(this.TBP);
+    var element = document.getElementById('volume-button');
+    var width = element.offsetWidth;
+    var offset = Math.round(element.getBoundingClientRect().left);
+    var percentage = Math.round(100 / width * event.clientX - offset)/100;
+    percentage = percentage < 0 ? 0 : percentage;
+    this.VOLUME = percentage;
+    // console.log(this.VOLUME)
+    if(!this.state.MUTED)
+    {
+        this.trackAudios[this.TBP].volume = this.VOLUME;
+    }
 }
 
 
@@ -207,11 +208,11 @@ return(
             
             
             <button
-                onClick={()=> this.muteTrack(this.TBP)}
-                onTouchStart={()=> this.muteTrack(this.TBP)}
+                onClick={()=> this.mute()}
+                onTouchStart={()=> this.mute(this.TBP)}
                 style={{backgroundColor: this.state.muteColor}}
             >
-            MUTE
+            <MuteIcon muted={this.state.MUTED } />
             </button>
             
             <button
@@ -220,7 +221,7 @@ return(
                 // onMouseDownCapture={()=>this.setVolume(this.TBP) }
                 onTouchStart={(event)=> this.handleVolume(event) }
             >
-            Vol
+            <VolumeIcon/>
             </button>
 
             
