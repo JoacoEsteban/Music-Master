@@ -161,8 +161,8 @@ h2, h3, h4, h5, h6{
 }
 .controls button
 {
-    padding: 0;
     margin: .03rem 0;
+    padding: 0;
     width:.6rem;
     height:.6rem;
     background:#252525;
@@ -173,6 +173,7 @@ h2, h3, h4, h5, h6{
 }
 .play-pause-button
 {
+    padding: .08rem;
     fill:  #49E253;
 }
 
