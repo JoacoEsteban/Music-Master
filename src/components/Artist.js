@@ -9,6 +9,8 @@ class Artist extends Component
     state={
         audioIsPlaying: false,
         trackBeingPlayed: undefined,
+        MUTED: false,
+        muteColor: undefined,
 
     }
 
@@ -22,12 +24,13 @@ class Artist extends Component
         this.artist = props.artist;
         this.tracks = props.tracks;
         this.trackAudios = this.tracks.map((track)=> new Audio(track.preview_url)); //tracklist
+
         this.TBP = undefined;
         this.AIP = false;
+        this.VOLUME = .5;
+        this.muteColor = this.state.MUTED ? 'red' : '#252525';
+        // this.MUTED = false;
     }
-    
-    
-
 
 //--------------------FUNCTIONS--------------------//
 
@@ -40,6 +43,8 @@ playTrack = (track) =>
         this.AIP = true;
         this.TBP = track;
         this.setState({audioIsPlaying: true, trackBeingPlayed: this.TBP});
+        if(!this.state.MUTED){this.setVolume(track);}
+        else{this.muteTrack(track)}
         
     }
 }
@@ -56,31 +61,72 @@ pauseTrack = (track) =>
     }
 }
 
-handleMedia = (i) =>
+handleMedia = (track) =>
 {
-    if(i !== undefined)
+    if(track !== undefined)
     {
 
         if(!this.AIP)
         {
-            this.playTrack(i);
+            this.playTrack(track);
         }else
         {
-            if(this.TBP === i)
+            if(this.TBP === track)
             {
-                this.pauseTrack(i);
-            }else if(this.trackAudios[i].error == undefined)
+                this.pauseTrack(track);
+            }else if(this.trackAudios[track].error == undefined)
             {
                 this.pauseTrack(this.TBP);
-                this.playTrack(i);
+                this.playTrack(track);
             }
         }
     }
 }
 
-componentWillUnmount()
+muteTrack = (track) =>
 {
-    this.pauseTrack(this.TBP);
+    if(this.trackAudios[track] !== undefined)
+    {
+
+        if(this.trackAudios[track].volume > 0)
+        {
+            this.trackAudios[track].volume = 0;
+            this.setState({MUTED: true, muteColor: 'red'});
+            console.log('muted: ', this.state.MUTED)
+            console.log('color: ', this.muteColor)
+        }else
+        {this.unMuteTrack(track)}
+    }
+}
+
+unMuteTrack = (track) =>
+{
+    this.trackAudios[track].volume = this.VOLUME;
+    this.setState({MUTED: false, muteColor: undefined});
+    console.log('muted: ', this.state.MUTED)
+    console.log('color: ', this.muteColor)
+}
+
+
+setVolume = (track, vol) =>
+{
+    if(vol !== undefined)
+    {
+        this.VOLUME = vol;
+    }
+    this.trackAudios[track].volume = this.VOLUME;
+}
+
+handleVolume = (event, mode) =>
+{
+        var element = document.getElementById('volume-button');
+        var width = element.offsetWidth;
+        var offset = Math.round(element.getBoundingClientRect().left);
+        var percentage = Math.round(100 / width * event.clientX - offset)/100;
+        percentage = percentage < 0 ? 0 : percentage;
+        this.VOLUME = percentage;
+        // console.log(this.VOLUME)
+        this.setVolume(this.TBP);
 }
 
 
@@ -88,6 +134,12 @@ componentWillUnmount()
 
 
 
+componentWillUnmount()
+{
+    if(this.AIP){
+    this.pauseTrack(this.TBP);
+    }
+}
 //--------------------COMPONENT--------------------//
 
 Image = ({image}) => image !== undefined ? <div className='artist-img' style={{backgroundImage: `url('${image.url}')` }}></div> : null;
@@ -101,19 +153,19 @@ Track = ({track, index}) =>
     // var trackAudio = new Audio(track.preview_url);
     return(
         <span className='track transition'>
-    <div 
-    className='track-img'
-    style={{backgroundImage: `url('${track.album.images[0].url}')` }}
-    onClick={()=>this.handleMedia(index)}
-    >
-    { this.state.trackBeingPlayed === index ? <PauseButton mode='track' />  : <PlayButton mode='track' />  }
-    </div>
-    <div className='labels'>
-        <h5 >{track.name}<br/> </h5>
-        <h6 >{track.album.name}</h6>
-    </div>
+            <div 
+            className='track-img'
+            style={{backgroundImage: `url('${track.album.images[0].url}')` }}
+            onClick={()=>this.handleMedia(index)}
+            >
+            { this.state.trackBeingPlayed === index ? <PauseButton mode='track' />  : <PlayButton mode='track' />  }
+            </div>
+            <div className='labels'>
+                <h5 >{track.name}<br/> </h5>
+                <h6 >{track.album.name}</h6>
+            </div>
         </span>
-)
+    )
 }
 
 Tracks = ({tracks}) =>
@@ -152,7 +204,28 @@ return(
             >
                 {this.state.audioIsPlaying ? <PauseButton mode='button'/> : <PlayButton mode='button' />}
             </button>
+            
+            
+            <button
+                onClick={()=> this.muteTrack(this.TBP)}
+                onTouchStart={()=> this.muteTrack(this.TBP)}
+                style={{backgroundColor: this.state.muteColor}}
+            >
+            MUTE
+            </button>
+            
+            <button
+                id='volume-button'
+                onMouseDown={(event)=> this.handleVolume(event, false) }
+                // onMouseDownCapture={()=>this.setVolume(this.TBP) }
+                onTouchStart={(event)=> this.handleVolume(event) }
+            >
+            Vol
+            </button>
 
+            
+
+            
         </div>
     </div>
 )

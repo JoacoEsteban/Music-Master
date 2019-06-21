@@ -153,17 +153,16 @@ h2, h3, h4, h5, h6{
 
 .controls
 {
+    display: flex;
+    flex-direction: column-reverse;
     position: fixed;
-    bottom: 50%;
+    bottom: 0%;
     transition: all .2s ease-out;
-}
-.controls:hover{
-    transform: translateX(.05rem);
-    /* left: .05rem; */
 }
 .controls button
 {
     padding: 0;
+    margin: .03rem 0;
     width:.6rem;
     height:.6rem;
     background:#252525;
@@ -176,6 +175,10 @@ h2, h3, h4, h5, h6{
 {
     fill:  #49E253;
 }
+
+.controls:hover{
+    transform: translateX(.05rem);
+}
 .controls button:hover
 {
     
@@ -184,11 +187,12 @@ h2, h3, h4, h5, h6{
 }
 .play-pause-button:hover{
     fill:#222;
-
 }
-
-
-
+#volume-button:hover
+{
+    transform: scale(1)
+    
+}
 
 
 
