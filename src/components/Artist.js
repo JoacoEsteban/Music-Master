@@ -208,20 +208,20 @@ return(
             
             
             <button
-                onClick={()=> this.mute()}
-                onTouchStart={()=> this.mute(this.TBP)}
-                style={{backgroundColor: this.state.muteColor}}
-            >
-            <MuteIcon muted={this.state.MUTED } />
-            </button>
-            
-            <button
                 id='volume-button'
                 onMouseDown={(event)=> this.handleVolume(event, false) }
                 // onMouseDownCapture={()=>this.setVolume(this.TBP) }
                 onTouchStart={(event)=> this.handleVolume(event) }
             >
             <VolumeIcon/>
+            </button>
+            
+            <button
+                onClick={()=> this.mute()}
+                onTouchStart={()=> this.mute(this.TBP)}
+                style={{backgroundColor: this.state.muteColor}}
+            >
+            <MuteIcon muted={this.state.MUTED } />
             </button>
 
             
