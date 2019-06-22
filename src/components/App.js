@@ -3,6 +3,8 @@ import { Animate } from "react-animate-mount";
 
 import Artist from './Artist'
 
+var ANIMATION_DURATION = 600;
+
 class App extends Component
 {
     state = 
@@ -29,11 +31,11 @@ class App extends Component
     searchArtist = () =>
     {
         var query = this.state.artistQuery.trim();
-        this.setState({found: query === '' ? undefined : 'loading', artistQuery: ''})
-
+        
         if(query !== '')
         {
-            this.setState({found: undefined});
+            this.setState({loading: true, found: undefined, artistQuery: ''})
+            // this.setState({found: undefined});
             setTimeout(() => {
                 
                 fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist-with-tracks/${query}`)
@@ -43,13 +45,13 @@ class App extends Component
                         console.log(json)
                         if(json)
                         {
-                            this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true});
+                            this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true, loading: false});
                         }else
                         {
-                            this.setState({found: false})
+                            this.setState({found: false, loading: false})
                         }
                     })
-                }, 500);
+                }, ANIMATION_DURATION);
         }
     }
 
@@ -77,13 +79,18 @@ class App extends Component
                 onClick={this.searchArtist}
                 >Search</button>
 
-                <Animate show={this.state.found == true} duration={500}>
+                <Animate show={this.state.found == true} duration={ANIMATION_DURATION}>
                     <Artist artist={this.state.artist} tracks={this.state.tracks}/>
                 </Animate>
 
-                <Animate show={this.state.found == false || this.state.found == 'loading'} duration={1000} >
+                <Animate show={this.state.loading === true} duration={ANIMATION_DURATION} >
                     <div className='artist'>
-                        <div className='not-found'>{this.state.found == false ? 'Artist Not Found' : 'Loading'}</div>
+                        <div className='not-found'>Loading</div>
+                    </div>
+                </Animate>
+                <Animate show={this.state.found === false} duration={ANIMATION_DURATION} >
+                    <div className='artist'>
+                        <div className='not-found'>Artist Not Found</div>
                     </div>
                 </Animate>
             </div>
