@@ -9,7 +9,7 @@ class App extends Component
 {
     state = 
     {
-        artistQuery: "eevee",
+        artistQuery: "Ben Rau",
         artist: undefined,
         tracks: undefined,
         found: undefined,
@@ -35,7 +35,6 @@ class App extends Component
         if(query !== '')
         {
             this.setState({loading: true, found: undefined, artistQuery: ''})
-            // this.setState({found: undefined});
             setTimeout(() => {
                 
                 fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist-with-tracks/${query}`)

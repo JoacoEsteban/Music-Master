@@ -9,10 +9,10 @@ import MuteIcon from  '../resources/icons/mute-icon'
 class Artist extends Component
 {
     state={
-        audioIsPlaying: false,
-        trackBeingPlayed: undefined,
-        MUTED: false,
-        muteColor: undefined,
+        audioIsPlaying: false, //Self Explanatory
+        trackBeingPlayed: undefined, //Index of the track being played
+        MUTED: false, //Self Explanatory
+        muteColor: undefined, //
 
     }
 
@@ -30,8 +30,6 @@ class Artist extends Component
         this.TBP = undefined;
         this.AIP = false;
         this.VOLUME = .5;
-        this.muteColor = this.state.MUTED ? 'red' : '#252525';
-        // this.MUTED = false;
     }
 
 //--------------------FUNCTIONS--------------------//
@@ -91,18 +89,23 @@ mute = () =>
 
         if( !this.state.MUTED )
         {
-            this.trackAudios[this.TBP].volume = 0;
-            this.setState({MUTED: true, muteColor: 'red'});
+            if(this.trackAudios[this.TBP] !== undefined)
+            {
+                this.setVolume(this.TBP, 0);
+            }
+            this.setState({MUTED: true});
             console.log('muted: ', this.state.MUTED)
-            console.log('color: ', this.muteColor)
         }else
         {this.unMuteTrack()}
-    // }
-}
-
+        // }
+    }
+    
 unMuteTrack = () =>
 {
-    this.trackAudios[this.TBP].volume = this.VOLUME;
+    if(this.trackAudios[this.TBP] !== undefined)
+    {
+        this.setVolume(this.TBP, this.VOLUME);
+    }
     this.setState({MUTED: false, muteColor: undefined});
     console.log('muted: ', this.state.MUTED)
     console.log('color: ', this.muteColor)
@@ -111,8 +114,9 @@ unMuteTrack = () =>
 
 setVolume = (track, vol) =>
 {
-    if(vol === undefined){vol = this.VOLUME}
-    this.trackAudios[track].volume = vol;
+
+        if(vol === undefined){vol = this.VOLUME}
+        this.trackAudios[track].volume = vol;
 }
 
 handleVolume = (event, mode) =>
@@ -219,7 +223,7 @@ return(
             <button
                 onClick={()=> this.mute()}
                 onTouchStart={()=> this.mute(this.TBP)}
-                style={{backgroundColor: this.state.muteColor}}
+                style={{backgroundColor: this.state.MUTED ? 'red' : null}}
             >
             <MuteIcon muted={this.state.MUTED } />
             </button>
