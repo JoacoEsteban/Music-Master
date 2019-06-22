@@ -6,14 +6,15 @@ import PauseButton from  '../resources/icons/pause-icon'
 import VolumeIcon from  '../resources/icons/volume-icon'
 import MuteIcon from  '../resources/icons/mute-icon'
 
+const logme = 'Logging...'
+
 class Artist extends Component
 {
     state={
         audioIsPlaying: false, //Self Explanatory
-        trackBeingPlayed: undefined, //Index of the track being played
+        trackBeingPlayed: undefined, //Index of the track being played. This WON'T change if the track is paused, It will just change if you play another track
         MUTED: false, //Self Explanatory
-        muteColor: undefined, //
-
+        VOLUME: .5,
     }
 
   
@@ -23,40 +24,37 @@ class Artist extends Component
     constructor(props)
     {
         super(props);
-        this.artist = props.artist;
-        this.tracks = props.tracks;
-        this.trackAudios = this.tracks.map((track)=> new Audio(track.preview_url)); //tracklist
-
-        this.TBP = undefined;
-        this.AIP = false;
-        this.VOLUME = .5;
+        this.artist = props.artist; //The artist object
+        this.tracks = props.tracks; // An array with the Top 10 Tracks
+        this.trackAudios = this.tracks.map((track)=> track.preview_url !== null ? new Audio(track.preview_url) : null); //Array with urls leading to the track previews
     }
 
 //--------------------FUNCTIONS--------------------//
 
-playTrack = (track) =>
+trackExists = (track) =>
 {
-    if( this.trackAudios[track].error == undefined )
+    return this.trackAudios[track] !== null ;
+}
+
+
+playTrack = (track) => //Recieves the index of the track that is going to play
+{
+    if( this.trackExists(track)) //If the track 'file' exists
     {
         this.trackAudios[track].play();
-        
-        this.AIP = true;
-        this.TBP = track;
-        this.setState({audioIsPlaying: true, trackBeingPlayed: this.TBP});
-        if(!this.state.MUTED){this.setVolume(track)}else{this.setVolume(this.TBP, 0); console.log('holi')}
+        this.setState({audioIsPlaying: true, trackBeingPlayed: track}); //Set State
+        if(!this.state.MUTED){this.setVolume(track)} //Sets the track audio to VOLUME if the audio is not muted
+        else{this.setVolume(track, 0)} //Else mutes the track (Goes along with MUTE)
         
     }
 }
 
 pauseTrack = (track) =>
 {
-    console.log('pause ', track)
-    if( this.trackAudios[track].error == undefined )
+    if( this.trackExists(track) ) //If the track 'file' exists
     {
         this.trackAudios[track].pause();
-        this.AIP = false;
-     
-        this.setState({audioIsPlaying: false, trackBeingPlayed: undefined});
+        this.setState({audioIsPlaying: false}); //Set State
     }
 }
 
@@ -64,73 +62,93 @@ handleMedia = (track) =>
 {
     if(track !== undefined)
     {
-
-        if(!this.AIP)
+        if(!this.state.audioIsPlaying)
         {
-            this.playTrack(track);
+            this.playTrack(track); //Plays track if audio is Paused
         }else
         {
-            if(this.TBP === track)
+
+            
+            if(this.state.trackBeingPlayed === track)
             {
-                this.pauseTrack(track);
-            }else if(this.trackAudios[track].error == undefined)
+                this.pauseTrack(track); //Pauses the track ONLY if audio is playing and if the argument track is the same as trackBeingPlayed
+            }else 
             {
-                this.pauseTrack(this.TBP);
+                //Pauses CURRENTLY PLAYING track
+                this.pauseTrack(this.state.trackBeingPlayed);
+                //Plays NEW track
                 this.playTrack(track);
             }
+        
+        
         }
     }
 }
 
+handleMute = () =>
+{
+    // Works like a TOGGLE
+    !this.state.MUTED ? this.mute() : this.unMute();
+}
+
 mute = () =>
 {
-    // if(this.trackAudios[track] !== undefined)
-    // {
-
-        if( !this.state.MUTED )
-        {
-            if(this.trackAudios[this.TBP] !== undefined)
-            {
-                this.setVolume(this.TBP, 0);
-            }
-            this.setState({MUTED: true});
-            console.log('muted: ', this.state.MUTED)
-        }else
-        {this.unMuteTrack()}
-        // }
-    }
-    
-unMuteTrack = () =>
-{
-    if(this.trackAudios[this.TBP] !== undefined)
+    if(this.state.trackBeingPlayed !== undefined)
     {
-        this.setVolume(this.TBP, this.VOLUME);
+        if(this.trackExists(this.state.trackBeingPlayed)) //If track being played exists
+        {
+            this.setVolume(this.state.trackBeingPlayed, 0); //Mutes the track
+        }
     }
-    this.setState({MUTED: false, muteColor: undefined});
-    console.log('muted: ', this.state.MUTED)
-    console.log('color: ', this.muteColor)
+    this.setState({MUTED: true});
+}
+
+unMute = () =>
+{
+    if(this.state.trackBeingPlayed !== undefined)
+    {
+        if(this.trackExists(this.state.trackBeingPlayed)) //If track being played exists
+        {
+            this.setVolume(this.state.trackBeingPlayed); //Unmutes the track to the Global Volume
+        }
+    }
+    this.setState({MUTED: false});
 }
 
 
 setVolume = (track, vol) =>
 {
-
-        if(vol === undefined){vol = this.VOLUME}
-        this.trackAudios[track].volume = vol;
+    if(vol === undefined){vol = this.state.VOLUME} //if you call it without parameters sets the volume to the global value
+    this.trackAudios[track].volume = vol;
 }
 
-handleVolume = (event, mode) =>
+handleVolume = (event, mode) => 
 {
-    var element = document.getElementById('volume-button');
+    //Sets the volume based on the POSITION OF THE MOUSE relative to the TOTAL WIDTH OF THE ELEMENT 
+    //This function ONLY TRIGGERS when The element IS CLICKED
+    
+    
+    
+    var element = document.getElementById('volume-button'); //Gets the button
+
+    //Width of the Element
     var width = element.offsetWidth;
+    //This is the distance between the window border to the Element: ||------->|___|
     var offset = Math.round(element.getBoundingClientRect().left);
-    var percentage = Math.round(100 / width * event.clientX - offset)/100;
+    //Position of the mouse compensating the offset
+    var mousePosX = event.clientX - offset;
+
+    // returns a 0-1 ratio of where the mouse is relative to the full width of the element: (|____*____| == 50% == 0.5)
+    var percentage = Math.round(100 / width * mousePosX)/100;
+    //Prevents percentage to go negative
     percentage = percentage < 0 ? 0 : percentage;
-    this.VOLUME = percentage;
-    // console.log(this.VOLUME)
-    if(!this.state.MUTED)
+    //Sets global volume but it doesn't apply it yet
+    this.state.VOLUME = percentage;
+    
+    //Applies volume if it isn't muted and if there is any song set to play
+    if(!this.state.MUTED && this.state.trackBeingPlayed !== undefined) 
     {
-        this.trackAudios[this.TBP].volume = this.VOLUME;
+        this.setVolume(this.state.trackBeingPlayed);
     }
 }
 
@@ -141,21 +159,17 @@ handleVolume = (event, mode) =>
 
 componentWillUnmount()
 {
-    if(this.AIP){
-    this.pauseTrack(this.TBP);
+    //Pauses the audio when unmounting the component
+    if(this.state.audioIsPlaying){
+    this.pauseTrack(this.state.trackBeingPlayed);
     }
 }
 //--------------------COMPONENT--------------------//
 
-Image = ({image}) => image !== undefined ? <div className='artist-img' style={{backgroundImage: `url('${image.url}')` }}></div> : null;
-
-    
 Genres = ({genres}) => genres.length !== 0 ? <nav> {genres.map((genre, i) => <span key={i}> / {genre}</span> )} / </nav> : null;
-
 
 Track = ({track, index}) =>
 {
-    // var trackAudio = new Audio(track.preview_url);
     return(
         <span className='track transition'>
             <div 
@@ -163,7 +177,7 @@ Track = ({track, index}) =>
             style={{backgroundImage: `url('${track.album.images[0].url}')` }}
             onClick={()=>this.handleMedia(index)}
             >
-            { this.state.trackBeingPlayed === index ? <PauseButton mode='track' />  : <PlayButton mode='track' />  }
+            { this.state.audioIsPlaying ?  this.state.trackBeingPlayed === index ? <PauseButton mode='track' /> : <PlayButton mode='track' /> : <PlayButton mode='track' /> }
             </div>
             <div className='labels'>
                 <h5 >{track.name}<br/> </h5>
@@ -172,6 +186,7 @@ Track = ({track, index}) =>
         </span>
     )
 }
+Image = ({image}) => image !== undefined ? <div className='artist-img' style={{backgroundImage: `url('${image.url}')` }}></div> : null;
 
 Tracks = ({tracks}) =>
 {
@@ -194,42 +209,30 @@ return(
         <h2>{artist.name}</h2>
         <code>{numeral(artist.followers.total).format('0,0')} followers</code>
 
-        {/* <Followers total={artist.followers.total} /> */}
         <this.Genres genres={artist.genres}/>
         <this.Tracks tracks={tracks}/>
 
         <div className='controls'>
             <button
-                onClick={()=>
-                    {
-                        this.handleMedia(this.TBP);
-
-                    }
-                }
+                onClick={ ()=> this.handleMedia(this.state.trackBeingPlayed) }
             >
                 {this.state.audioIsPlaying ? <PauseButton mode='button'/> : <PlayButton mode='button' />}
             </button>
             
-            
             <button
                 id='volume-button'
                 onMouseDown={(event)=> this.handleVolume(event, false) }
-                // onMouseDownCapture={()=>this.setVolume(this.TBP) }
                 onTouchStart={(event)=> this.handleVolume(event) }
             >
-            <VolumeIcon/>
+                <VolumeIcon/>
             </button>
             
             <button
-                onClick={()=> this.mute()}
-                onTouchStart={()=> this.mute(this.TBP)}
+                onClick={()=> this.handleMute()}
                 style={{backgroundColor: this.state.MUTED ? 'red' : null}}
             >
-            <MuteIcon muted={this.state.MUTED } />
+                <MuteIcon muted={this.state.MUTED } />
             </button>
-
-            
-
             
         </div>
     </div>
