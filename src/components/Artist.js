@@ -127,29 +127,34 @@ handleVolume = (event, mode) =>
     //Sets the volume based on the POSITION OF THE MOUSE relative to the TOTAL WIDTH OF THE ELEMENT 
     //This function ONLY TRIGGERS when The element IS CLICKED
     
-    
-    
-    var element = document.getElementById('volume-button'); //Gets the button
-
-    //Width of the Element
-    var width = element.offsetWidth;
-    //This is the distance between the window border to the Element: ||------->|___|
-    var offset = Math.round(element.getBoundingClientRect().left);
-    //Position of the mouse compensating the offset
-    var mousePosX = event.clientX - offset;
-
-    // returns a 0-1 ratio of where the mouse is relative to the full width of the element: (|____*____| == 50% == 0.5)
-    var percentage = Math.round(100 / width * mousePosX)/100;
-    //Prevents percentage to go negative
-    percentage = percentage < 0 ? 0 : percentage;
-    //Sets global volume but it doesn't apply it yet
-    this.state.VOLUME = percentage;
-    
-    //Applies volume if it isn't muted and if there is any song set to play
-    if(!this.state.MUTED && this.state.trackBeingPlayed !== undefined) 
+    if(event.buttons === 1) //when the right mouse button is clicked
     {
-        this.setVolume(this.state.trackBeingPlayed);
+
+        var element = document.getElementById('volume-button'); //Gets the button
+        
+        //Width of the Element
+        var width = element.offsetWidth;
+        //This is the distance between the window border to the Element: ||------->|___|
+        var offset = Math.round(element.getBoundingClientRect().left);
+        //Position of the mouse compensating the offset
+        var mousePosX = event.clientX - offset;
+        
+        // returns a 0-1 ratio of where the mouse is relative to the full width of the element: (|____*____| == 50% == 0.5)
+        var percentage = Math.round(100 / width * mousePosX)/100;
+        //Prevents percentage to go negative
+        percentage = percentage < 0 ? 0 : percentage;
+        //Sets global volume but it doesn't apply it yet
+        this.setState({VOLUME: percentage}, ()=>
+        {
+            //Applies volume if it isn't muted and if there is any song set to play
+        if(!this.state.MUTED && this.state.trackBeingPlayed !== undefined) 
+        {
+            this.setVolume(this.state.trackBeingPlayed);
+        }
     }
+    );
+    }
+    
 }
 
 
@@ -221,10 +226,15 @@ return(
             
             <button
                 id='volume-button'
+                onMouseMove={(event)=> this.handleVolume(event, false) }
                 onMouseDown={(event)=> this.handleVolume(event, false) }
-                onTouchStart={(event)=> this.handleVolume(event) }
+            >
+            <div 
+            className='volume-level-indicator'
+            style={{width: `${this.state.VOLUME*100}%`}}
             >
                 <VolumeIcon/>
+            </div>
             </button>
             
             <button

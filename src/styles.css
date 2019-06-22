@@ -39,6 +39,9 @@ h2, h3, h4, h5, h6{
     color: #d0d0d0;
 }
 
+.abs{
+    position: absolute;
+}
 
 
 
@@ -167,8 +170,8 @@ h2, h3, h4, h5, h6{
     height:.6rem;
     background:#252525;
     border: 0px;
-    font-size: .2rem;
     border-radius: .04rem;
+    font-size: .2rem;
     transition: all .2s ease-out;
 }
 .play-pause-button
@@ -182,7 +185,6 @@ h2, h3, h4, h5, h6{
 }
 .controls button:hover
 {
-    
     background:  rgb(57, 173, 64);
     transform: scale(1.05)
 }
@@ -200,6 +202,13 @@ h2, h3, h4, h5, h6{
     
 }
 
+.volume-level-indicator
+{
+    border-radius: .03rem;
+    height: 100%;
+    background-color: black;
+    z-index: 10;
+}
 
 
 
