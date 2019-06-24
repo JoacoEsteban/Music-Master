@@ -226,11 +226,11 @@ return(
                 onMouseMove={(event)=> this.handleVolume(event, false) }
                 onMouseDown={(event)=> this.handleVolume(event, false) }
             >
-                    <VolumeIcon/>
                 <div 
                 className='volume-level-indicator'
                 style={{width: `${this.state.VOLUME*100}%`}}
                 >
+                    <VolumeIcon/>
                 </div>
             </button>
             

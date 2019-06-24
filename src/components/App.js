@@ -9,7 +9,7 @@ class App extends Component
 {
     state = 
     {
-        artistQuery: "Ben Rau",
+        artistQuery: "",
         artist: undefined,
         tracks: undefined,
         found: undefined,
