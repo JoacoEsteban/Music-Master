@@ -3,7 +3,7 @@ import React from "react";
 const SVG = ({mode, path}) => (
 <svg 
     // style={style}
-    className={mode == 'play-pause-button' ? 'play-pause-button' : ''}
+    className={mode == 'play-pause-button' ? mode : ''}
     xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 24 24"
 >

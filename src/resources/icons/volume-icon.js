@@ -3,8 +3,7 @@ import React from 'react'
 
 const icon = ({mode, action}) =>
 {
-    const iconClass = mode == 'track' ? 'track-button' : 'play-pause-button abs'; 
-    const iconColor = mode == 'track' ? '#000' : '#aaa';
+    const iconClass = mode == 'track' ? 'track-button' : 'icon volume-icon abs'; 
     action = mode == 'track' ? null : action;
     return(
         <div className={iconClass} >

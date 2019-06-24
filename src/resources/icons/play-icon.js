@@ -3,7 +3,7 @@ import React from 'react'
 
 const icon = ({mode, action}) =>
 {
-    const iconClass = mode == 'track' ? 'track-button' : 'play-pause-button'; 
+    const iconClass = mode == 'track' ? 'track-button' : 'icon'; 
     action = mode == 'track' ? null : action;
     return(
         <div className={iconClass} >

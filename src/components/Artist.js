@@ -204,7 +204,6 @@ Tracks = ({tracks}) =>
 
 
 
-
 render(){
     var artist = this.artist;
     var tracks = this.tracks;
@@ -218,26 +217,24 @@ return(
         <this.Tracks tracks={tracks}/>
 
         <div className='controls'>
-            <button
-                onClick={ ()=> this.handleMedia(this.state.trackBeingPlayed) }
-            >
+            <button className='button' onClick={ ()=> this.handleMedia(this.state.trackBeingPlayed) } >
                 {this.state.audioIsPlaying ? <PauseButton mode='button'/> : <PlayButton mode='button' />}
             </button>
             
-            <button
+            <button className='button'
                 id='volume-button'
                 onMouseMove={(event)=> this.handleVolume(event, false) }
                 onMouseDown={(event)=> this.handleVolume(event, false) }
             >
-            <div 
-            className='volume-level-indicator'
-            style={{width: `${this.state.VOLUME*100}%`}}
-            >
-                <VolumeIcon/>
-            </div>
+                    <VolumeIcon/>
+                <div 
+                className='volume-level-indicator'
+                style={{width: `${this.state.VOLUME*100}%`}}
+                >
+                </div>
             </button>
             
-            <button
+            <button className='button'
                 onClick={()=> this.handleMute()}
                 style={{backgroundColor: this.state.MUTED ? 'red' : null}}
             >

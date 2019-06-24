@@ -35,23 +35,23 @@ class App extends Component
         if(query !== '')
         {
             this.setState({loading: true, found: undefined, artistQuery: ''})
-            setTimeout(() => {
-                
+            setTimeout(() => 
+            {
                 fetch(`https://spotify-api-wrapper-joaco.herokuapp.com/artist-with-tracks/${query}`)
                 .then(response => {  if(response.status !== 404){ return response.json();} else {return false;}})
                 .then(json => 
+                {
+                    console.log(json)
+                    if(json)
                     {
-                        console.log(json)
-                        if(json)
-                        {
-                            this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true, loading: false});
-                        }else
-                        {
-                            this.setState({found: false, loading: false})
-                        }
-                    })
-                }, ANIMATION_DURATION);
-        }
+                        this.setState({artist: json.artist.items[0], tracks: json.tracks, found: true, loading: false});
+                    }else
+                    {
+                        this.setState({found: false, loading: false})
+                    }
+                })
+            }, ANIMATION_DURATION);
+        }else{this.setState({found: undefined})}
     }
 
     handleKeyPress = ({key}) =>
@@ -76,7 +76,7 @@ class App extends Component
                 <button 
                 className='button text transition'
                 onClick={this.searchArtist}
-                >Search</button>
+                >{this.state.found === true ? 'Clear' : 'Search'}</button>
 
                 <Animate show={this.state.found == true} duration={ANIMATION_DURATION}>
                     <Artist artist={this.state.artist} tracks={this.state.tracks}/>
