@@ -27,6 +27,7 @@ class Artist extends Component
         this.artist = props.artist; //The artist object
         this.tracks = props.tracks; // An array with the Top 10 Tracks
         this.trackAudios = this.tracks.map((track)=> track.preview_url !== null ? new Audio(track.preview_url) : null); //Array with urls leading to the track previews
+        this.fadeTime = 10;
     }
 
 //--------------------FUNCTIONS--------------------//
@@ -42,21 +43,61 @@ playTrack = (track) => //Recieves the index of the track that is going to play
     if( this.trackExists(track)) //If the track 'file' exists
     {
         this.trackAudios[track].play();
+        
         this.setState({audioIsPlaying: true, trackBeingPlayed: track}); //Set State
-        if(!this.state.MUTED){this.setVolume(track)} //Sets the track audio to VOLUME if the audio is not muted
+        if(!this.state.MUTED){this.fadeIn(track);} //Sets the track audio to VOLUME if the audio is not muted
         else{this.setVolume(track, 0)} //Else mutes the track (Goes along with MUTE)
         
     }
 }
 
+fadeIn = (track) =>
+{
+    this.setVolume(track, 0);
+        var inter = setInterval(() => 
+        {
+            this.trackAudios[track].volume = Math.round((this.trackAudios[track].volume + .05) * 100) / 100;
+            console.log(this.trackAudios[track].volume);
+            if(this.trackAudios[track].volume >= this.state.VOLUME)
+            {
+                this.setVolume(track);
+                clearInterval(inter);
+            }
+        }, this.fadeTime);
+}
+
+// --------------------------------------------------//
+
 pauseTrack = (track) =>
 {
     if( this.trackExists(track) ) //If the track 'file' exists
     {
-        this.trackAudios[track].pause();
-        this.setState({audioIsPlaying: false}); //Set State
+        this.fadeOut(track);
+        console.log(2);
     }
 }
+
+
+fadeOut = (track) =>
+{
+    var inter = setInterval(() => 
+    {
+            this.trackAudios[track].volume = Math.round((this.trackAudios[track].volume - .05) * 100) / 100;
+            // this.trackAudios[track].volume = Math.round(this.trackAudios[track].volume - .05);
+        console.log(this.trackAudios[track].volume);
+        if(this.trackAudios[track].volume <= 0.05)
+        {
+            this.setVolume(track);
+            this.trackAudios[track].pause();
+            this.setState({audioIsPlaying: false}); //Set State
+            clearInterval(inter);
+        }
+        }, this.fadeTime);
+}
+
+
+// --------------------------------------------------//
+
 
 handleMedia = (track) =>
 {
@@ -84,6 +125,11 @@ handleMedia = (track) =>
         }
     }
 }
+
+
+
+
+
 
 handleMute = () =>
 {
