@@ -85,6 +85,10 @@ updateCurrentTrackTime = (mode) =>
             this.setState({tracksCurrentTime: arrCurTimes});
             logme(`Current: ${curTime}`)
             
+            if(!this.state.audioIsPlaying)
+            {
+                clearInterval(this.updateCurrentTrackTimeInterval);
+            }
             
         }, 100);
     }
