@@ -29,7 +29,9 @@ class Artist extends Component
         this.tracks = props.tracks; // An array with the Top 10 Tracks
         this.trackAudios = this.tracks.map((track)=> track.preview_url !== null ? new Audio(track.preview_url) : null); //Array with urls leading to the track previews
         this.fadeTime = 10;
-        this.fadeValue = .06;
+        this.fadeValue = .05;
+
+        this.volumeIsFading = false; //indicates wheter a volume fade is taking place
     }
 
 //--------------------FUNCTIONS--------------------//
@@ -56,11 +58,13 @@ playTrack = (track) => //Recieves the index of the track that is going to play
 fadeIn = (track) =>
 {
     this.setVolume(track, 0);
-        var inter = setInterval(() => 
+    this.volumeIsFading = true;
+        var inter = setInterval(() =>  //Progressively turns up the volume until the global Volume value is met
         {
             this.setVolume(track, Math.round((this.trackAudios[track].volume + this.fadeValue) * 100) / 100);
             if(this.trackAudios[track].volume >= this.state.VOLUME)
             {
+                this.volumeIsFading = false;
                 clearInterval(inter);
             }
         }, this.fadeTime);
@@ -85,11 +89,13 @@ pauseTrack = (track, fadeOutComplete) =>
 
 fadeOut = (track) =>
 {
+    this.volumeIsFading = true;
     var inter = setInterval(() => 
     {
-            this.setVolume(track, Math.round((this.trackAudios[track].volume - this.fadeValue) * 100) / 100);
+        this.setVolume(track, Math.round((this.trackAudios[track].volume - this.fadeValue) * 100) / 100);
         if(this.trackAudios[track].volume <= 0.05)
         {
+            this.volumeIsFading = false;
             this.pauseTrack(track, true);
             clearInterval(inter);
         }
@@ -121,8 +127,15 @@ handleMedia = (track) =>
             {
                 //Pauses CURRENTLY PLAYING track
                 this.pauseTrack(this.state.trackBeingPlayed);
-                //Plays NEW track
-                this.playTrack(track);
+                var waitUntilFadeEnds = setInterval(() => {
+                    if(!this.volumeIsFading)
+                    {
+                        //Plays NEW track
+                        this.playTrack(track);
+                        clearInterval(waitUntilFadeEnds);
+                    }
+                    
+                }, 50);
             }
         
         
