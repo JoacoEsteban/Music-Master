@@ -6,7 +6,7 @@ import PauseButton from  '../resources/icons/pause-icon'
 import VolumeIcon from  '../resources/icons/volume-icon'
 import MuteIcon from  '../resources/icons/mute-icon'
 
-const logme = (logger) => logger === undefined ? console.log('Logging...' ) : console.log('Logging...: ', logger );
+const logme = (logger) => logger === undefined ? console.log('Logging...' ) : console.log('//LOG// ', logger );
 
 
 class Artist extends Component
@@ -29,6 +29,7 @@ class Artist extends Component
         this.tracks = props.tracks; // An array with the Top 10 Tracks
         this.trackAudios = this.tracks.map((track)=> track.preview_url !== null ? new Audio(track.preview_url) : null); //Array with urls leading to the track previews
         this.fadeTime = 10;
+        this.fadeValue = .06;
     }
 
 //--------------------FUNCTIONS--------------------//
@@ -57,8 +58,7 @@ fadeIn = (track) =>
     this.setVolume(track, 0);
         var inter = setInterval(() => 
         {
-            logme();
-            this.setVolume(track, Math.round((this.trackAudios[track].volume + .02) * 100) / 100);
+            this.setVolume(track, Math.round((this.trackAudios[track].volume + this.fadeValue) * 100) / 100);
             if(this.trackAudios[track].volume >= this.state.VOLUME)
             {
                 clearInterval(inter);
@@ -74,7 +74,6 @@ pauseTrack = (track, fadeOutComplete) =>
     {
         if(fadeOutComplete) //Pauses the track if the fadeout is completed
         {
-            logme(track)
             this.trackAudios[track].pause();
             this.setState({audioIsPlaying: false}); //Set State
         }else{ //If there's no fadeOut in progress then triggers one
@@ -88,7 +87,7 @@ fadeOut = (track) =>
 {
     var inter = setInterval(() => 
     {
-            this.setVolume(track, Math.round((this.trackAudios[track].volume - .02) * 100) / 100);
+            this.setVolume(track, Math.round((this.trackAudios[track].volume - this.fadeValue) * 100) / 100);
         if(this.trackAudios[track].volume <= 0.05)
         {
             this.pauseTrack(track, true);
@@ -96,6 +95,9 @@ fadeOut = (track) =>
         }
         }, this.fadeTime);
 }
+
+
+
 
 
 // --------------------------------------------------//
@@ -166,9 +168,10 @@ unMute = () =>
 
 setVolume = (track, vol) =>
 {
+
     if(vol === undefined){vol = this.state.VOLUME} //if you call it without parameters sets the volume to the global value
-    this.trackAudios[track].volume = vol;
-    console.log(this.trackAudios[track].volume)
+    this.trackAudios[track].volume = vol > 1 ? 1 : vol; //Prevents values over 1
+    // console.log(this.trackAudios[track].volume)
 }
 
 handleVolume = (event, mode) => 
@@ -196,12 +199,12 @@ handleVolume = (event, mode) =>
         this.setState({VOLUME: percentage}, ()=>
         {
             //Applies volume if it isn't muted and if there is any song set to play
-        if(!this.state.MUTED && this.state.trackBeingPlayed !== undefined) 
-        {
-            this.setVolume(this.state.trackBeingPlayed);
+            if(!this.state.MUTED && this.state.trackBeingPlayed !== undefined) 
+            {
+                this.setVolume(this.state.trackBeingPlayed);
+            }
         }
-    }
-    );
+        );
     }
     
 }
