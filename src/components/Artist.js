@@ -16,6 +16,7 @@ class Artist extends Component
         trackBeingPlayed: undefined, //Index of the track being played. This WON'T change if the track is paused, It will just change if you play another track
         MUTED: false, //Self Explanatory
         VOLUME: .5,
+        tracksCurrentTime: [],
     }
     
     
@@ -67,6 +68,30 @@ checkIfTrackHasEnded = (mode) =>
 } 
 
 
+updateCurrentTrackTime = (mode) =>
+{
+    if(mode === 'clear') //Clears the interval if the audio gets paused
+    {
+        clearInterval(this.updateCurrentTrackTimeInterval);
+    }else{
+
+        var track = this.trackAudios[this.state.trackBeingPlayed];
+        var duration = track.duration;
+        this.updateCurrentTrackTimeInterval = setInterval(() => 
+        {
+            var curTime = track.currentTime/duration*100;
+            var arrCurTimes = this.state.tracksCurrentTime;
+            arrCurTimes[this.state.trackBeingPlayed] = curTime;
+            this.setState({tracksCurrentTime: arrCurTimes});
+            logme(`Current: ${curTime}`)
+            
+            
+        }, 100);
+    }
+}
+
+
+
 trackExists = (track) =>
 {
     return this.trackAudios[track] !== null ;
@@ -80,7 +105,12 @@ playTrack = (track) => //Recieves the index of the track that is going to play
         this.trackAudios[track].play();
         
         
-        this.setState({audioIsPlaying: true, trackBeingPlayed: track}, ()=>this.checkIfTrackHasEnded()); //Set State
+        this.setState({audioIsPlaying: true, trackBeingPlayed: track}, ()=>
+            {
+                this.checkIfTrackHasEnded()
+                this.updateCurrentTrackTime();
+            }    
+        ); //Set State
         if(!this.state.MUTED){this.fadeIn(track);} //Sets the track audio to VOLUME if the audio is not muted
         else{this.setVolume(track, 0)} //Else mutes the track (Goes along with MUTE)
         
@@ -113,7 +143,10 @@ pauseTrack = (track, fadeOutComplete) =>
         if(fadeOutComplete) //Pauses the track if the fadeout is completed
         {
             this.trackAudios[track].pause();
-            this.setState({audioIsPlaying: false}, ()=> this.checkIfTrackHasEnded('clear')); //Set State
+            this.setState({audioIsPlaying: false}, ()=> {
+                this.checkIfTrackHasEnded('clear');
+                this.updateCurrentTrackTime('clear');
+            }); //Set State
         }else{ //If there's no fadeOut in progress then triggers one
             this.fadeOut(track);
         }
@@ -285,9 +318,12 @@ Track = ({track, index}) =>
             style={{backgroundImage: `url('${track.album.images[0].url}')` }}
             onClick={()=>this.handleMedia(index)}
             >
-            { this.state.audioIsPlaying ?  this.state.trackBeingPlayed === index ? <PauseButton mode='track' /> : <PlayButton mode='track' /> : <PlayButton mode='track' /> }
+                    { this.state.audioIsPlaying ?  this.state.trackBeingPlayed === index ? <PauseButton mode='track' /> : <PlayButton mode='track' /> : <PlayButton mode='track' /> }
             </div>
-            <div className='labels'>
+            <div 
+            className='labels track-time-indicator'
+            style={{width: `${.02 * this.state.tracksCurrentTime[index]}rem`}}
+            >
                 <h5 >{track.name}<br/> </h5>
                 <h6 >{track.album.name}</h6>
             </div>

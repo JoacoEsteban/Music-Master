@@ -126,6 +126,9 @@ h2, h3, h4, h5, h6{
     width: 2rem;
     /* height: .5rem; */
     position: absolute;
+    background: #222;
+    padding: .06rem;
+    width: 2rem;
 }
 
 .track h5
@@ -151,8 +154,6 @@ h2, h3, h4, h5, h6{
     border-radius: 2rem;
     opacity: .75;
 }
-
-
 
 
 
