@@ -122,13 +122,23 @@ h2, h3, h4, h5, h6{
     padding: .7rem; /*controls play button size*/
 
 }
-.labels {
+.labels-container {
     width: 2rem;
-    /* height: .5rem; */
     position: absolute;
     background: #222;
-    padding: .06rem;
-    width: 2rem;
+}
+.track-time-indicator {
+    width: 0;
+    height: .05rem;
+    position: absolute;
+    background: rgb(57, 173, 64);
+    
+}
+
+.labels {
+    margin: .06rem;
+    /* background: red; */
+    /* width: 1rem; */
 }
 
 .track h5

@@ -321,11 +321,16 @@ Track = ({track, index}) =>
                     { this.state.audioIsPlaying ?  this.state.trackBeingPlayed === index ? <PauseButton mode='track' /> : <PlayButton mode='track' /> : <PlayButton mode='track' /> }
             </div>
             <div 
-            className='labels track-time-indicator'
-            style={{width: `${.02 * this.state.tracksCurrentTime[index]}rem`}}
+            className='labels-container'
             >
-                <h5 >{track.name}<br/> </h5>
-                <h6 >{track.album.name}</h6>
+                <div 
+                className='track-time-indicator'
+                style={{width: `${.02 * this.state.tracksCurrentTime[index]}rem`}}
+                 />
+                <div className='labels'>
+                    <h5 >{track.name}<br/> </h5>
+                    <h6 >{track.album.name}</h6>
+                </div>
             </div>
         </span>
     )
