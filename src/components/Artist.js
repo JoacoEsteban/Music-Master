@@ -6,7 +6,8 @@ import PauseButton from  '../resources/icons/pause-icon'
 import VolumeIcon from  '../resources/icons/volume-icon'
 import MuteIcon from  '../resources/icons/mute-icon'
 
-const logme = 'Logging...'
+const logme = (logger) => logger === undefined ? console.log('Logging...' ) : console.log('Logging...: ', logger );
+
 
 class Artist extends Component
 {
@@ -56,11 +57,10 @@ fadeIn = (track) =>
     this.setVolume(track, 0);
         var inter = setInterval(() => 
         {
-            this.trackAudios[track].volume = Math.round((this.trackAudios[track].volume + .05) * 100) / 100;
-            console.log(this.trackAudios[track].volume);
+            logme();
+            this.setVolume(track, Math.round((this.trackAudios[track].volume + .02) * 100) / 100);
             if(this.trackAudios[track].volume >= this.state.VOLUME)
             {
-                this.setVolume(track);
                 clearInterval(inter);
             }
         }, this.fadeTime);
@@ -68,12 +68,18 @@ fadeIn = (track) =>
 
 // --------------------------------------------------//
 
-pauseTrack = (track) =>
+pauseTrack = (track, fadeOutComplete) =>
 {
-    if( this.trackExists(track) ) //If the track 'file' exists
+    if( this.trackExists(track)  ) //If the track 'file' exists
     {
-        this.fadeOut(track);
-        console.log(2);
+        if(fadeOutComplete) //Pauses the track if the fadeout is completed
+        {
+            logme(track)
+            this.trackAudios[track].pause();
+            this.setState({audioIsPlaying: false}); //Set State
+        }else{ //If there's no fadeOut in progress then triggers one
+            this.fadeOut(track);
+        }
     }
 }
 
@@ -82,14 +88,10 @@ fadeOut = (track) =>
 {
     var inter = setInterval(() => 
     {
-            this.trackAudios[track].volume = Math.round((this.trackAudios[track].volume - .05) * 100) / 100;
-            // this.trackAudios[track].volume = Math.round(this.trackAudios[track].volume - .05);
-        console.log(this.trackAudios[track].volume);
+            this.setVolume(track, Math.round((this.trackAudios[track].volume - .02) * 100) / 100);
         if(this.trackAudios[track].volume <= 0.05)
         {
-            this.setVolume(track);
-            this.trackAudios[track].pause();
-            this.setState({audioIsPlaying: false}); //Set State
+            this.pauseTrack(track, true);
             clearInterval(inter);
         }
         }, this.fadeTime);
@@ -166,6 +168,7 @@ setVolume = (track, vol) =>
 {
     if(vol === undefined){vol = this.state.VOLUME} //if you call it without parameters sets the volume to the global value
     this.trackAudios[track].volume = vol;
+    console.log(this.trackAudios[track].volume)
 }
 
 handleVolume = (event, mode) => 
