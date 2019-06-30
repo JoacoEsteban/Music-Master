@@ -38,15 +38,19 @@ class Artist extends Component
     
 checkIfTrackHasEnded = (mode) =>
 {
-    var songDuration = this.trackAudios[this.state.trackBeingPlayed].duration * 1000; //
+    // Time left for the audio to end
+    var timeOutTime = (this.trackAudios[this.state.trackBeingPlayed].duration - this.trackAudios[this.state.trackBeingPlayed].currentTime) * 1000;
 
-    if(this.state.trackBeingPlayed !== undefined)
+    if(mode === 'clear') //Clears the timeOut if the audio gets paused
     {
-        setTimeout(() => {
-            
-            var checkIt = setInterval(() => 
+        clearTimeout(this.checkIfTrackHasEndedTimeOut)
+    }
+    else
+    {
+        this.checkIfTrackHasEndedTimeOut = setTimeout(() => //sets a timeOut for when the audio ends and then sets the state
+        {
+            var checkIt = setInterval(() =>
             {
-                logme('hola')
                 if(this.state.audioIsPlaying)
                 {
                     if(this.trackAudios[this.state.trackBeingPlayed].ended)
@@ -58,10 +62,8 @@ checkIfTrackHasEnded = (mode) =>
                     clearInterval(checkIt);
                 }
             }, 50);
-        }, songDuration);
+        }, timeOutTime);
     }
-
-    
 } 
 
 
@@ -111,7 +113,7 @@ pauseTrack = (track, fadeOutComplete) =>
         if(fadeOutComplete) //Pauses the track if the fadeout is completed
         {
             this.trackAudios[track].pause();
-            this.setState({audioIsPlaying: false}); //Set State
+            this.setState({audioIsPlaying: false}, ()=> this.checkIfTrackHasEnded('clear')); //Set State
         }else{ //If there's no fadeOut in progress then triggers one
             this.fadeOut(track);
         }
