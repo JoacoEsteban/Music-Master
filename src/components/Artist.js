@@ -17,10 +17,10 @@ class Artist extends Component
         MUTED: false, //Self Explanatory
         VOLUME: .5,
     }
-
-  
-
-
+    
+    
+    
+    
     //--------------------GLOBAL VARIABLES--------------------//
     constructor(props)
     {
@@ -28,13 +28,42 @@ class Artist extends Component
         this.artist = props.artist; //The artist object
         this.tracks = props.tracks; // An array with the Top 10 Tracks
         this.trackAudios = this.tracks.map((track)=> track.preview_url !== null ? new Audio(track.preview_url) : null); //Array with urls leading to the track previews
-        this.fadeTime = 10;
-        this.fadeValue = .05;
-
+        this.fadeTime = 10; //fade interval time value
+        this.fadeValue = .05; //fade interval volume difference per interval time value
+        
         this.volumeIsFading = false; //indicates wheter a volume fade is taking place
     }
+    
+    //--------------------FUNCTIONS--------------------//
+    
+checkIfTrackHasEnded = (mode) =>
+{
+    var songDuration = this.trackAudios[this.state.trackBeingPlayed].duration * 1000; //
 
-//--------------------FUNCTIONS--------------------//
+    if(this.state.trackBeingPlayed !== undefined)
+    {
+        setTimeout(() => {
+            
+            var checkIt = setInterval(() => 
+            {
+                logme('hola')
+                if(this.state.audioIsPlaying)
+                {
+                    if(this.trackAudios[this.state.trackBeingPlayed].ended)
+                    {
+                        this.setState({audioIsPlaying: false});
+                    }
+                }else
+                {
+                    clearInterval(checkIt);
+                }
+            }, 50);
+        }, songDuration);
+    }
+
+    
+} 
+
 
 trackExists = (track) =>
 {
@@ -48,12 +77,15 @@ playTrack = (track) => //Recieves the index of the track that is going to play
     {
         this.trackAudios[track].play();
         
-        this.setState({audioIsPlaying: true, trackBeingPlayed: track}); //Set State
+        
+        this.setState({audioIsPlaying: true, trackBeingPlayed: track}, ()=>this.checkIfTrackHasEnded()); //Set State
         if(!this.state.MUTED){this.fadeIn(track);} //Sets the track audio to VOLUME if the audio is not muted
         else{this.setVolume(track, 0)} //Else mutes the track (Goes along with MUTE)
         
+        
     }
 }
+
 
 fadeIn = (track) =>
 {
@@ -225,6 +257,9 @@ handleVolume = (event, mode) =>
 
 
 
+componentDidMount()
+{
+}
 
 
 componentWillUnmount()
@@ -233,6 +268,7 @@ componentWillUnmount()
     if(this.state.audioIsPlaying){
     this.pauseTrack(this.state.trackBeingPlayed);
     }
+    clearInterval(this.checkIfTrackHasEnded);
 }
 //--------------------COMPONENT--------------------//
 
