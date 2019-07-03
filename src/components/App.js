@@ -76,7 +76,7 @@ class App extends Component
                 <button 
                 className='button text transition'
                 onClick={this.searchArtist}
-                >{this.state.found === true ? 'Clear' : 'Search'}</button>
+                >{this.state.found === true && this.state.artistQuery == '' ? 'Clear' : 'Search'}</button>
 
                 <Animate show={this.state.found == true} duration={ANIMATION_DURATION}>
                     <Artist artist={this.state.artist} tracks={this.state.tracks}/>
