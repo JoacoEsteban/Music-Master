@@ -5,6 +5,7 @@ import PlayButton from  '../resources/icons/play-icon'
 import PauseButton from  '../resources/icons/pause-icon'
 import VolumeIcon from  '../resources/icons/volume-icon'
 import MuteIcon from  '../resources/icons/mute-icon'
+import UnavalIcon from  '../resources/icons/unaval-icon'
 
 const logme = (logger) => logger === undefined ? console.log('Logging...' ) : console.log('//LOG// ', logger );
 
@@ -83,7 +84,6 @@ updateCurrentTrackTime = (mode) =>
             var arrCurTimes = this.state.tracksCurrentTime;
             arrCurTimes[this.state.trackBeingPlayed] = curTime;
             this.setState({tracksCurrentTime: arrCurTimes});
-            logme(`Current: ${curTime}`)
             
             if(!this.state.audioIsPlaying)
             {
@@ -182,7 +182,7 @@ fadeOut = (track) =>
 
 handleMedia = (track) =>
 {
-    if(track !== undefined)
+    if(this.trackExists(track))
     {
         if(!this.state.audioIsPlaying)
         {
@@ -322,7 +322,7 @@ Track = ({track, index}) =>
             style={{backgroundImage: `url('${track.album.images[0].url}')` }}
             onClick={()=>this.handleMedia(index)}
             >
-                    { this.state.audioIsPlaying ?  this.state.trackBeingPlayed === index ? <PauseButton mode='track' /> : <PlayButton mode='track' /> : <PlayButton mode='track' /> }
+                    { this.trackAudios[index] !== null ? this.state.audioIsPlaying ?  this.state.trackBeingPlayed === index ? <PauseButton mode='track' /> : <PlayButton mode='track' /> : <PlayButton mode='track' /> : <UnavalIcon mode='track'/> }
             </div>
             <div 
             className='labels-container'
